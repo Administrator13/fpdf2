@@ -1,0 +1,66 @@
+# إعادة إنشاء ملفات السكربت وملف التشغيل التلقائي بعد إعادة التشغيل
+
+# محتوى السكربت
+script_content = """
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
+
+EMAIL = "gv5003727@gmail.com"
+PASSWORD = "Yc@yaQ@qB65ksf2"
+TRANSACTION_TYPE = "تصديق"
+LOCATION = "اسطنبول"
+
+options = Options()
+options.add_argument("--start-maximized")
+
+driver = webdriver.Chrome(options=options)
+
+try:
+    driver.get("https://ecsc-expat.sy/login")
+    time.sleep(3)
+
+    driver.find_element(By.NAME, "email").send_keys(EMAIL)
+    driver.find_element(By.NAME, "password").send_keys(PASSWORD)
+    driver.find_element(By.XPATH, "//button[contains(text(),'تسجيل الدخول')]").click()
+    time.sleep(5)
+
+    driver.get("https://ecsc-expat.sy/requests/new")
+    time.sleep(3)
+
+    driver.find_element(By.NAME, "transaction_type").send_keys(TRANSACTION_TYPE)
+    driver.find_element(By.NAME, "center").send_keys(LOCATION)
+    time.sleep(2)
+
+    try:
+        book_btn = driver.find_element(By.XPATH, "//button[contains(text(),'حجز')]")
+        book_btn.click()
+        print("✅ تم تنفيذ الحجز بنجاح.")
+    except:
+        print("❌ لا يوجد مواعيد متاحة حالياً.")
+except Exception as e:
+    print("حدث خطأ:", e)
+finally:
+    time.sleep(5)
+    driver.quit()
+"""
+
+# محتوى ملف BAT
+bat_content = """
+@echo off
+cd C:\\Users\\Administrator13\\Desktop
+python auto_booking_ecsc.py
+"""
+
+# حفظ الملفات
+script_path = "/mnt/data/auto_booking_ecsc.py"
+bat_path = "/mnt/data/run_auto_booking.bat"
+
+with open(script_path, "w", encoding="utf-8") as f:
+    f.write(script_content)
+
+with open(bat_path, "w", encoding="utf-8") as f:
+    f.write(bat_content)
+
+[script_path, bat_path]
